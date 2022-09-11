@@ -13,7 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 # function based view
 def index(request):
 
-    return render(request, 'student/index.html')
+    return render(request, 'students/index.html')
 
 @api_view(['GET'])
 def query(request, id=None):
@@ -26,13 +26,11 @@ def query(request, id=None):
 def search(request):
     student_id = request.GET.get('student_id', None)
     student_name = request.GET.get('student_name', None)
-    print(student_id)
+
     if student_id:
-        print(student_id, student_name)
         record = Student.objects.get(id=student_id)
         serializer = StudentSerializer(record)
         if serializer.data:
-            print("in serializer.data")
             return JsonResponse(serializer.data)
         else:
             return JsonResponse({"message": "Student Not found"})
@@ -52,35 +50,6 @@ def search(request):
             return JsonResponse(data, safe=False)
     return render(request, 'students/search.html')
 
-@csrf_exempt
-def student_view(request):
-    print("in student_view")
-    student_id = request.GET.get('student_id', None)
-    student_name = request.GET.get('student_name', None)
-    print(student_id)
-    if student_id:
-        print(student_id, student_name)
-        record = Student.objects.get(id=student_id)
-        serializer = StudentSerializer(record)
-        if serializer.data:
-            print("in serializer.data")
-            return JsonResponse(serializer.data)
-        else:
-            return JsonResponse({"message": "Student Not found"})
-
-    elif student_name:
-        names = student_name.split(" ")
-
-        data = []
-        for name in names:
-            result = Student.objects.filter(first_name__contains=name)
-            serializer = StudentSerializer(result, many=True)
-            print(type(serializer.data))
-            data.append(serializer.data)
-        if data == []:
-            return JsonResponse({"message": "Student Not found"})
-        else:
-            return JsonResponse(data, safe=False)
 
 @csrf_exempt
 def student_create_view(request):
@@ -91,7 +60,6 @@ def student_create_view(request):
         form.save()
         message = 'Student record saved successfully, create another!'
         form = StudentForm(None)
-        # return JsonResponse({"message": "Student data saved successfully!"})
 
     return render(request, "students/create_student.html", {'form': form, 'message': message})
     

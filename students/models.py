@@ -35,11 +35,6 @@ class Student(models.Model):
     def __str__(self):
         return f'Student: {self.first_name} {self.last_name}'
 
-    # @property
-    # def total_pages_read(self):
-    #     queryset = self.books.all().aggregate(total_pages_read=models.Sum('number_of_pages'))
-    #     return queryset['total_pages_read']
-
     @property
     def student_full_name(self):
         return f'{self.first_name} {self.last_name}'
@@ -55,14 +50,12 @@ class Student(models.Model):
     @property
     def books_read(self):
         books = self.books.all()
-        # serializer = BookSerializer(many=True)
         books_read = [book.title for book in books]
         return books_read
 
     @property
     def book_pages_read(self):
         books = self.books.all()
-        # serializer = BookSerializer(many=True)
         book_pages_read = 0
         for book in books:
             book_pages_read += int(book.number_of_pages)
