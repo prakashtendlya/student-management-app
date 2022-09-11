@@ -1,0 +1,9 @@
+{% block content %}
+<p>{{message}}</p>
+<form method="POST">
+    <table>
+       {{ form.as_table }}
+    </table>
+    <button type="submit">Save</button>
+</form>
+{% endblock %}
